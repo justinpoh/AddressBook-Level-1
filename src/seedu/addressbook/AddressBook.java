@@ -666,10 +666,7 @@ public class AddressBook {
      * @return formatted listing message with index
      */
     private static String getIndexedPersonListElementMessage(int visibleIndex, String[] person) {
-        HashMap<PersonProperty, String> temp2 = new HashMap<>();
-        temp2.put(PersonProperty.NAME, person[PERSON_DATA_INDEX_NAME]);
-        temp2.put(PersonProperty.PHONE, person[PERSON_DATA_INDEX_PHONE]);
-        temp2.put(PersonProperty.EMAIL, person[PERSON_DATA_INDEX_EMAIL]);
+        HashMap<PersonProperty, String> temp2 = convertPersonStringArrayToHashMap(person);
         return String.format(MESSAGE_DISPLAY_LIST_ELEMENT_INDEX, visibleIndex) + getMessageForFormattedPersonData(temp2);
     }
 
@@ -693,10 +690,7 @@ public class AddressBook {
         // clone to insulate from future changes to arg list
         ArrayList<HashMap<PersonProperty, String>> temp = new ArrayList<>();
         for(String[] element : newListing){
-            HashMap<PersonProperty, String> temp2 = new HashMap<>();
-            temp2.put(PersonProperty.NAME, element[PERSON_DATA_INDEX_NAME]);
-            temp2.put(PersonProperty.PHONE, element[PERSON_DATA_INDEX_PHONE]);
-            temp2.put(PersonProperty.EMAIL, element[PERSON_DATA_INDEX_EMAIL]);
+            HashMap<PersonProperty, String> temp2 = convertPersonStringArrayToHashMap(element);
             temp.add(temp2);
         }
         latestPersonListingView = temp;
@@ -803,10 +797,7 @@ public class AddressBook {
      * @param person to add
      */
     private static void addPersonToAddressBook(String[] person) {
-        HashMap<PersonProperty, String> temp = new HashMap<>();
-        temp.put(PersonProperty.NAME, person[PERSON_DATA_INDEX_NAME]);
-        temp.put(PersonProperty.PHONE, person[PERSON_DATA_INDEX_PHONE]);
-        temp.put(PersonProperty.EMAIL, person[PERSON_DATA_INDEX_EMAIL]);
+        HashMap<PersonProperty, String> temp = convertPersonStringArrayToHashMap(person);
         ALL_PERSONS.add(temp);
         savePersonsToFile(getAllPersonsInAddressBook(), storageFilePath);
     }
@@ -848,10 +839,7 @@ public class AddressBook {
     private static void initialiseAddressBookModel(ArrayList<String[]> persons) {
         ALL_PERSONS.clear();
         for(String[] element : persons){
-            HashMap<PersonProperty, String> temp = new HashMap<>();
-            temp.put(PersonProperty.NAME, element[PERSON_DATA_INDEX_NAME]);
-            temp.put(PersonProperty.PHONE, element[PERSON_DATA_INDEX_PHONE]);
-            temp.put(PersonProperty.EMAIL, element[PERSON_DATA_INDEX_EMAIL]);
+            HashMap<PersonProperty, String> temp = convertPersonStringArrayToHashMap(element);
             ALL_PERSONS.add(temp);
         }
     }
@@ -1192,6 +1180,14 @@ public class AddressBook {
      */
     private static ArrayList<String> splitByWhitespace(String toSplit) {
         return new ArrayList<>(Arrays.asList(toSplit.trim().split("\\s+")));
+    }
+
+    private static HashMap<PersonProperty, String> convertPersonStringArrayToHashMap(String[] toConvert){
+        HashMap<PersonProperty, String> temp = new HashMap<>();
+        temp.put(PersonProperty.NAME, toConvert[PERSON_DATA_INDEX_NAME]);
+        temp.put(PersonProperty.PHONE, toConvert[PERSON_DATA_INDEX_PHONE]);
+        temp.put(PersonProperty.EMAIL, toConvert[PERSON_DATA_INDEX_EMAIL]);
+        return temp;
     }
 
 }
