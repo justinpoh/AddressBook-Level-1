@@ -80,6 +80,7 @@ public class AddressBook {
     private static final String MESSAGE_ERROR_READING_FROM_FILE = "Unexpected error: unable to read from file: %1$s";
     private static final String MESSAGE_ERROR_WRITING_TO_FILE = "Unexpected error: unable to write to file: %1$s";
     private static final String MESSAGE_PERSONS_FOUND_OVERVIEW = "%1$d persons found!";
+    private static final String MESSAGE_PERSONS_FOUND_OVERVIEW_SORTED = "%1$d persons found! This list has been sorted.";
     private static final String MESSAGE_STORAGE_FILE_CREATED = "Created new empty storage file: %1$s";
     private static final String MESSAGE_WELCOME = "Welcome to your Address Book!";
     private static final String MESSAGE_USING_DEFAULT_FILE = "Using default storage file : " + DEFAULT_STORAGE_FILEPATH;
@@ -129,6 +130,8 @@ public class AddressBook {
     private static final String DIVIDER = "===================================================";
 
     private static final String COMMAND_SORT_WORD = "sort";
+    private static final String COMMAND_SORT_DESC = "Sort the address book in alphabetical order";
+    private static final String COMMAND_SORT_EXAMPLE = COMMAND_SORT_WORD;
 
     /* We use a String array to store details of a single person.
      * The constants given below are the indexes for the different data elements of a person
@@ -617,7 +620,11 @@ public class AddressBook {
         sortingComparator comparatorToSortAddressBook = new sortingComparator();
         Collections.sort(temp, comparatorToSortAddressBook);
         showToUser(temp);
-        return getMessageForPersonsDisplayedSummary(temp);
+        return getMessageForPersonsDisplayedSortedSummary(temp);
+    }
+
+    private static String getMessageForPersonsDisplayedSortedSummary(ArrayList<HashMap<PersonProperty, String>> sortedPersons){
+        return String.format(MESSAGE_PERSONS_FOUND_OVERVIEW_SORTED, sortedPersons.size());
     }
 
     /**
@@ -1130,6 +1137,7 @@ public class AddressBook {
                 + getUsageInfoForViewCommand() + LS
                 + getUsageInfoForDeleteCommand() + LS
                 + getUsageInfoForClearCommand() + LS
+                + getUsageInfoForSortCommand() + LS
                 + getUsageInfoForExitCommand() + LS
                 + getUsageInfoForHelpCommand();
     }
@@ -1165,6 +1173,12 @@ public class AddressBook {
     private static String getUsageInfoForViewCommand() {
         return String.format(MESSAGE_COMMAND_HELP, COMMAND_LIST_WORD, COMMAND_LIST_DESC) + LS
                 + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_LIST_EXAMPLE) + LS;
+    }
+
+    /** Returns the string for showing 'sort' command usage instructions */
+    private static String getUsageInfoForSortCommand() {
+        return String.format(MESSAGE_COMMAND_HELP, COMMAND_SORT_WORD, COMMAND_SORT_DESC) + LS
+                + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_SORT_EXAMPLE) + LS;
     }
 
     /** Returns string for showing 'help' command usage instruction */
