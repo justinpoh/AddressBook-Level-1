@@ -664,33 +664,48 @@ public class AddressBook {
 
         final String editField = commandTypeAndArgs[EDIT_PARAMETER_FIELD];
         final String newPersonInformation = getEditNewInformation(commandTypeAndArgs);
-        final HashMap<PersonProperty, String> targetInModel = getPersonByLastVisibleIndex(targetVisibleIndex);
+        final HashMap<PersonProperty, String> targetToEdit = getPersonByLastVisibleIndex(targetVisibleIndex);
+        String responseFromEditting = editPersonInformation(editField, newPersonInformation, targetToEdit);
+        if(responseFromEditting != null){
+            return responseFromEditting;
+        }
+        saveEditsToAddressBook();
+        return getMessageForSuccessfulEditPerson(targetToEdit, editField);
+    }
+
+    /** Given the required parameters, perform the actual editting of person information.
+     *
+     * @param editField specifies which field (name, phone or email) to edit
+     * @param newPersonInformation specifies the new information to be editted into the person
+     * @param targetToEdit a reference to the object of the person to be editted
+     * @return returns a display message specifying the problem with the information provided, else return null
+     */
+    private static String editPersonInformation(String editField, String newPersonInformation, HashMap<PersonProperty, String> targetToEdit){
+
         switch(editField){
             case EDIT_PARAMETER_EMAIL:
                 if(!isPersonEmailValid(newPersonInformation)){
                     return MESSAGE_INVALID_PERSON_EMAIL;
                 }
-                targetInModel.remove(PersonProperty.EMAIL);
-                targetInModel.put(PersonProperty.EMAIL, newPersonInformation);
+                targetToEdit.remove(PersonProperty.EMAIL);
+                targetToEdit.put(PersonProperty.EMAIL, newPersonInformation);
                 break;
             case EDIT_PARAMETER_PHONE:
                 if(!isPersonPhoneValid(newPersonInformation)){
                     return MESSAGE_INVALID_PERSON_PHONE;
                 }
-                targetInModel.remove(PersonProperty.PHONE);
-                targetInModel.put(PersonProperty.PHONE, newPersonInformation);
+                targetToEdit.remove(PersonProperty.PHONE);
+                targetToEdit.put(PersonProperty.PHONE, newPersonInformation);
                 break;
             case EDIT_PARAMETER_NAME:
                 if(!isPersonNameValid(newPersonInformation)){
                     return MESSAGE_INVALID_PERSON_NAME;
                 }
-                targetInModel.remove(PersonProperty.NAME);
-                targetInModel.put(PersonProperty.NAME, newPersonInformation);
+                targetToEdit.remove(PersonProperty.NAME);
+                targetToEdit.put(PersonProperty.NAME, newPersonInformation);
                 break;
         }
-
-        saveEditsToAddressBook();
-        return getMessageForSuccessfulEditPerson(targetInModel, editField);
+        return null;
     }
 
     /**
