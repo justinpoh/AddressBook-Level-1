@@ -615,7 +615,7 @@ public class AddressBook {
 
 
     /**
-     * This method does a deep copy of ALL_PERSONS, and conduct sorting and displaying using the copy.
+     * This method does a shallow copy of ALL_PERSONS, and conduct sorting and displaying using the copy.
      * Upon invoking showToUser(), latestPersonListingView is updated to point to the copy.
      * Hence, upon further invoking of executeDeletePerson, after executing this method, the sorted copy
      * would be used to find the correct Person based on the sorted index, then this Person reference is
@@ -638,7 +638,7 @@ public class AddressBook {
             }
         }
         sortingComparator comparatorToSortAddressBook = new sortingComparator();
-        Collections.sort(temp, comparatorToSortAddressBook);
+        temp.sort(comparatorToSortAddressBook);
         showToUser(temp);
         return getMessageForPersonsDisplayedSortedSummary(temp);
     }
